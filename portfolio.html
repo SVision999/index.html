@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aashrith Banda — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink: #1B2431;
+    --paper: #F5F6F2;
+    --paper-dim: #ECEEE7;
+    --brass: #A9822C;
+    --slate: #5B6472;
+    --rule: #D9DCD3;
+    --display: 'Fraunces', serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+    --max: 760px;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; }
+  body{
+    margin:0; font-family: var(--body); color: var(--ink); background: var(--paper);
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+    display:flex; flex-direction:column; min-height:100vh;
+  }
+  a{ color:inherit; }
+  @media (prefers-reduced-motion: reduce){ *{ transition-duration:.001ms !important; animation-duration:.001ms !important; } }
+
+  /* ===== Top bar ===== */
+  .topbar{
+    display:flex; justify-content:space-between; align-items:center;
+    padding: 24px 32px; position:relative; z-index:60;
+  }
+  .logo{ font-family: var(--display); font-weight:600; font-size:19px; }
+  .logo span{ color:var(--brass); }
+  .menu-btn{
+    background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:10px;
+    font-family: var(--mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink);
+  }
+  .menu-btn .bars{ width:22px; height:14px; position:relative; }
+  .menu-btn .bars span{
+    position:absolute; left:0; width:100%; height:1.5px; background:var(--ink);
+    transition: transform .2s ease, opacity .2s ease;
+  }
+  .menu-btn .bars span:nth-child(1){ top:0; }
+  .menu-btn .bars span:nth-child(2){ top:6px; }
+  .menu-btn .bars span:nth-child(3){ top:12px; }
+  .menu-btn.open .bars span:nth-child(1){ transform: translateY(6px) rotate(45deg); }
+  .menu-btn.open .bars span:nth-child(2){ opacity:0; }
+  .menu-btn.open .bars span:nth-child(3){ transform: translateY(-6px) rotate(-45deg); }
+
+  /* ===== Menu overlay ===== */
+  .overlay{
+    position:fixed; inset:0; background:var(--ink); color:var(--paper); z-index:50;
+    display:flex; flex-direction:column; align-items:flex-start; justify-content:center;
+    gap:22px; padding: 0 48px;
+    opacity:0; visibility:hidden; transform:translateY(-8px);
+    transition: opacity .3s ease, transform .3s ease, visibility .3s;
+  }
+  .overlay.open{ opacity:1; visibility:visible; transform:none; }
+  .overlay a{
+    font-family: var(--display); font-size: clamp(28px,6vw,44px); font-weight:500;
+    text-decoration:none; color: var(--paper); opacity:.55; transition: opacity .2s ease, color .2s ease;
+  }
+  .overlay a:hover, .overlay a.current{ opacity:1; color: var(--brass); }
+  .overlay .idx{ font-family:var(--mono); font-size:12px; color:var(--brass); margin-right:14px; }
+
+  /* ===== Pages ===== */
+  main{ flex:1; display:flex; align-items:center; }
+  .page-wrap{ width:100%; max-width: var(--max); margin:0 auto; padding: 20px 32px 40px; }
+  .page{ display:none; }
+  .page.active{ display:block; animation: fadeUp .45s ease; }
+  @keyframes fadeUp{ from{ opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;} }
+
+  .eyebrow{
+    font-family: var(--mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase;
+    color: var(--brass); margin-bottom:16px;
+  }
+  h1.name{
+    font-family: var(--display); font-weight:500; font-size: clamp(38px,7vw,60px);
+    line-height:1.04; margin:0 0 20px 0; letter-spacing:-.01em;
+  }
+  .tagline{ font-size:17px; color:var(--slate); max-width:520px; margin:0 0 32px 0; }
+
+  .social-row{ display:flex; gap:22px; flex-wrap:wrap; margin-bottom:44px; }
+  .social-row a{
+    text-decoration:none; font-weight:600; font-size:14px; border-bottom:1px solid var(--rule);
+    padding-bottom:2px; transition: border-color .15s ease, color .15s ease;
+  }
+  .social-row a:hover{ color:var(--brass); border-color:var(--brass); }
+
+  .edu-block{
+    border-top:1px solid var(--rule); padding-top:20px; margin-top:8px;
+  }
+  .edu-school{ font-weight:600; font-size:15px; margin-bottom:4px; }
+  .edu-meta{ color:var(--slate); font-size:13.5px; }
+  .edu-meta + .edu-meta{ margin-top:2px; }
+  .edu-stats{
+    display:flex; gap:28px; flex-wrap:wrap; margin-top:18px;
+  }
+  .edu-stats div .figure{ font-family:var(--mono); font-weight:600; font-size:20px; }
+  .edu-stats div .caption{ font-size:11px; color:var(--slate); text-transform:uppercase; letter-spacing:.05em; margin-top:3px; }
+
+  h2.page-title{ font-family:var(--display); font-weight:500; font-size:30px; margin:0 0 6px 0; }
+  .page-sub{ color:var(--slate); margin:0 0 32px 0; max-width:520px; font-size:14.5px; }
+
+  .card-list{ display:flex; flex-direction:column; }
+  .card{ padding: 18px 0; border-bottom:1px solid var(--rule); }
+  .card:last-child{ border-bottom:none; }
+  .card-title{ font-weight:600; font-size:15.5px; }
+  .card-org{ color:var(--brass); font-size:12.5px; font-weight:600; letter-spacing:.02em; text-transform:uppercase; margin-top:2px; }
+  .card p{ color:var(--slate); font-size:14px; margin:8px 0 0 0; }
+
+  .group{ margin-bottom:28px; }
+  .group:last-child{ margin-bottom:0; }
+  .group-label{
+    font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--brass); margin-bottom:10px;
+  }
+
+  .contact-list{ display:flex; flex-direction:column; gap:14px; margin-top:8px; }
+  .contact-list a{
+    font-family:var(--display); font-size: clamp(20px,4vw,28px); font-weight:500;
+    text-decoration:none; display:inline-block; border-bottom:1px solid transparent;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .contact-list a:hover{ color:var(--brass); border-color:var(--brass); }
+
+  /* ===== Bottom pager ===== */
+  .pager{
+    display:flex; justify-content:space-between; align-items:center;
+    padding: 18px 32px; border-top:1px solid var(--rule);
+    font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+  }
+  .pager button{
+    background:none; border:none; cursor:pointer; color:var(--slate); font: inherit;
+    display:flex; align-items:center; gap:8px; transition: color .15s ease;
+  }
+  .pager button:hover{ color:var(--ink); }
+  .pager .center{ color:var(--brass); }
+
+  footer{
+    text-align:center; padding: 16px 32px 26px; font-family:var(--mono); font-size:11px; color:var(--slate);
+  }
+  footer .sep{ margin:0 8px; opacity:.5; }
+
+  @media (max-width:600px){
+    .topbar{ padding:20px 22px; }
+    .page-wrap{ padding:12px 22px 28px; }
+    .pager{ padding:16px 22px; }
+    .overlay{ padding:0 28px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">Aashrith<span>.</span></div>
+  <button class="menu-btn" id="menuBtn">
+    <span class="bars"><span></span><span></span><span></span></span>
+    Menu
+  </button>
+</div>
+
+<div class="overlay" id="overlay">
+  <a href="#" data-page="home"><span class="idx">01</span>Home</a>
+  <a href="#" data-page="research"><span class="idx">02</span>Research</a>
+  <a href="#" data-page="clubs"><span class="idx">03</span>Clubs</a>
+  <a href="#" data-page="contact"><span class="idx">04</span>Contact</a>
+</div>
+
+<main>
+  <div class="page-wrap">
+
+    <!-- HOME -->
+    <section class="page active" data-page="home">
+      <div class="eyebrow">Class of 2026</div>
+      <h1 class="name">Aashrith Banda</h1>
+      <p class="tagline">Student researcher working across biotech, environmental engineering, and assistive
+        hardware — currently splitting time between a CRISPR workshop, a Harvard-mentored paper, and two
+        nonprofits focused on tech access.</p>
+      <div class="social-row">
+        <a href="mailto:aashrith.banda@gmail.com">Email</a>
+        <a href="https://www.linkedin.com/in/aashrith-banda-0211b93042/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="tel:+13025952403">Phone</a>
+      </div>
+      <div class="edu-block">
+        <div class="edu-school">Wilmington Charter School</div>
+        <div class="edu-meta">Focus: Biotechnology &amp; Environmental Engineering</div>
+        <div class="edu-meta">2022 – 2026 · Class of 2026</div>
+        <div class="edu-stats">
+          <div><div class="figure">15+</div><div class="caption">Research roles</div></div>
+          <div><div class="figure">$16K+</div><div class="caption">Funding awarded</div></div>
+          <div><div class="figure">4</div><div class="caption">Clubs led</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESEARCH -->
+    <section class="page" data-page="research">
+      <h2 class="page-title">Research</h2>
+      <p class="page-sub">A collection of research, internships, and independent projects — from a national
+        antifungal proposal to a self-powered force plate.</p>
+      <div class="card-list">
+        <div class="card">
+          <div class="card-title">Hydroscan — Founder &amp; Main Team Captain</div>
+          <div class="card-org">Samsung Solve for Tomorrow</div>
+          <p>AI-powered buoy for water contamination analysis, built with DNREC and DuPont researchers. Awarded
+            $10,000 to Wilmington Charter.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">Phonovis — Team Co-Captain</div>
+          <div class="card-org">Samsung Solve for Tomorrow</div>
+          <p>Hearing aid that detects and alerts users to common household sounds; piloted with the Delaware
+            School of the Deaf across 50+ students. Won $2,500 in school funding.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">Biomechanical Energy Harvesting Analysis</div>
+          <div class="card-org">Harvard Medical Mentor</div>
+          <p>Working toward publication comparing triboelectric, piezoelectric, and electromagnetic energy
+            harvesters for wearable formats.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">Liver Exosomes in NAFLD — K. pneumoniae Virulence</div>
+          <div class="card-org">University of Delaware</div>
+          <p>Analyzed how exosomes from NAFLD-affected liver cells modify Klebsiella pneumoniae behavior,
+            uncovering a novel host–microbe interaction pathway.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">Paid Microbiology Intern</div>
+          <div class="card-org">Delaware State University</div>
+          <p>Studied food preservative efficacy on E. coli strains under Dr. Chanelle Acheamfour; $2,000 stipend.
+            One of 30 selected to present to 100+ faculty and industry experts.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">DNA-Sequencing Intern</div>
+          <div class="card-org">Primbio Research Institute LLC</div>
+          <p>Worked alongside a professional researcher and a college intern for a full summer before senior year.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">NASA TechRise Research</div>
+          <div class="card-org">NASA</div>
+          <p>Developing a research proposal with NASA engineers over Basecamp; one of 60 teams selected
+            nationally, with $1,500 in funding awarded.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">Force Plate Independent Research</div>
+          <div class="card-org">Independent Project</div>
+          <p>Low-cost, TENG-powered force plate paired with a machine learning model to clean data and predict
+            jump height and ground reaction force.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">AIQUA-Net Environmental Engineering Research</div>
+          <div class="card-org">Independent Project</div>
+          <p>LiDAR-based simulation analyzing NOAA and EPA datasets across four models. 1st place, EAEV category,
+            New Castle County Science Fair; qualified for DVSF.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">CRISPR-Cas9 Editing Workshop</div>
+          <div class="card-org">UD Gene Editing Institute</div>
+          <p>Hands-on gene knockouts in bacterial systems, analyzed via gel electrophoresis.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">Cardiovascular Research</div>
+          <div class="card-org">UT Austin</div>
+          <p>Fully-funded, hybrid cardiovascular research program.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">BioEHSC Research Proposal</div>
+          <div class="card-org">UC Berkeley</div>
+          <p>Proposal on novel antifungals presented to a national panel of professors as team Wilmington A,
+            earning national recognition.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">Journal Publisher</div>
+          <div class="card-org">Yale Daily News</div>
+          <p>Selected for a competitive remote journalism program with Yale faculty; published a peer-reviewed
+            article in the August issue.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">Childlife Clubhouse Volunteer</div>
+          <div class="card-org">Nemours Children's Hospital</div>
+          <p>Assisted patient transport and tech console operations; led a student team planning a party for
+            children at the hospital.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLUBS -->
+    <section class="page" data-page="clubs">
+      <h2 class="page-title">Clubs &amp; Leadership</h2>
+      <p class="page-sub">Organizations founded, co-founded, or led — mostly focused on getting technology and
+        education resources to students who need them.</p>
+      <div class="card-list">
+        <div class="card">
+          <div class="card-title">Senior Vice President; Co-Founder, Tech Division</div>
+          <div class="card-org">Serve &amp; Supply Nonprofit</div>
+          <p>Helped raise over $50,000 in educational equipment for students in low-income settings; co-founded
+            the tech division spreading internet access nationwide.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">Founder &amp; Co-Leader</div>
+          <div class="card-org">Tech4Tomorrow</div>
+          <p>Collects and redistributes donated technology to students in need; $1,150 raised so far.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">President</div>
+          <div class="card-org">Civil Engineering Club</div>
+          <p>Runs the DelDOT Bridge Design Competition (15 teams, 2025–2026); wrote a research proposal, built
+            CAD drawings, and tested a bridge design at PolyTech HS. Also shadowed DelDOT engineers.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">Co-Founder</div>
+          <div class="card-org">EcoBio Club</div>
+          <p>Weekly presentations on ecological and biological topics for ~10 students; runs the school's annual
+            USESO competition.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="page" data-page="contact">
+      <h2 class="page-title">Contact</h2>
+      <p class="page-sub">Open to conversations about admissions, research, or collaboration.</p>
+      <div class="contact-list">
+        <a href="mailto:aashrith.banda@gmail.com">aashrith.banda@gmail.com</a>
+        <a href="tel:+13025952403">(302) 595-2403</a>
+        <a href="https://www.linkedin.com/in/aashrith-banda-0211b93042/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<div class="pager">
+  <button id="prevBtn">← Prev</button>
+  <span class="center" id="pagerLabel">01 / 04</span>
+  <button id="nextBtn">Next →</button>
+</div>
+
+<footer>
+  Copyright © 2026 Aashrith Banda <span class="sep">·</span> Built with HTML, CSS &amp; JS
+</footer>
+
+<script>
+  const order = ['home','research','clubs','contact'];
+  const pages = document.querySelectorAll('.page');
+  const overlay = document.getElementById('overlay');
+  const menuBtn = document.getElementById('menuBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const pagerLabel = document.getElementById('pagerLabel');
+  let current = 0;
+
+  function render(){
+    pages.forEach(p => p.classList.toggle('active', p.dataset.page === order[current]));
+    overlay.querySelectorAll('a').forEach(a => a.classList.toggle('current', a.dataset.page === order[current]));
+    pagerLabel.textContent = String(current+1).padStart(2,'0') + ' / ' + String(order.length).padStart(2,'0');
+    window.scrollTo(0,0);
+  }
+
+  function goTo(pageName){
+    const idx = order.indexOf(pageName);
+    if(idx > -1){ current = idx; render(); closeMenu(); }
+  }
+
+  function closeMenu(){ overlay.classList.remove('open'); menuBtn.classList.remove('open'); }
+
+  menuBtn.addEventListener('click', () => {
+    overlay.classList.toggle('open');
+    menuBtn.classList.toggle('open');
+  });
+  overlay.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', (e) => { e.preventDefault(); goTo(a.dataset.page); });
+  });
+  prevBtn.addEventListener('click', () => {
+    current = (current - 1 + order.length) % order.length;
+    render();
+  });
+  nextBtn.addEventListener('click', () => {
+    current = (current + 1) % order.length;
+    render();
+  });
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'ArrowRight') nextBtn.click();
+    if(e.key === 'ArrowLeft') prevBtn.click();
+    if(e.key === 'Escape') closeMenu();
+  });
+
+  render();
+</script>
+
+</body>
+</html>
