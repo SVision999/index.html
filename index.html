@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aashrith Banda — Portfolio</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink: #1B2431;
@@ -14,20 +12,22 @@
     --brass: #A9822C;
     --slate: #5B6472;
     --rule: #D9DCD3;
-    --display: 'Fraunces', serif;
-    --body: 'Inter', sans-serif;
-    --mono: 'IBM Plex Mono', monospace;
-    --max: 760px;
+    --display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+    --body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+    --mono: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+    --max: 1040px;
   }
   *{ box-sizing:border-box; }
   html,body{ height:100%; }
   body{
     margin:0; font-family: var(--body); color: var(--ink); background: var(--paper);
     line-height:1.6; -webkit-font-smoothing:antialiased;
-    display:flex; flex-direction:column; min-height:100vh;
+    display:flex; flex-direction:column; min-height:100vh; transition:background .55s ease, color .55s ease;
   }
   a{ color:inherit; }
-  @media (prefers-reduced-motion: reduce){ *{ transition-duration:.001ms !important; animation-duration:.001ms !important; } }
+  @media (prefers-reduced-motion: reduce){
+    *{ transition-duration:.001ms !important; animation-duration:.001ms !important; }
+  }
 
   /* ===== Top bar ===== */
   .topbar{
@@ -36,6 +36,9 @@
   }
   .logo{ font-family: var(--display); font-weight:600; font-size:19px; }
   .logo span{ color:var(--brass); }
+  .quick-nav{ display:flex; align-items:center; gap:4px; padding:5px; border:1px solid rgba(27,36,49,.15); border-radius:999px; background:rgba(255,255,255,.48); backdrop-filter:blur(10px); }
+  .quick-nav a{ padding:7px 13px; border-radius:999px; text-decoration:none; font-size:12px; font-weight:600; transition:background .2s ease, color .2s ease; }
+  .quick-nav a:hover{ background:var(--ink); color:var(--paper); }
   .menu-btn{
     background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:10px;
     font-family: var(--mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink);
@@ -72,16 +75,72 @@
   main{ flex:1; display:flex; align-items:center; }
   .page-wrap{ width:100%; max-width: var(--max); margin:0 auto; padding: 20px 32px 40px; }
   .page{ display:none; }
-  .page.active{ display:block; animation: fadeUp .45s ease; }
-  @keyframes fadeUp{ from{ opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;} }
+  .page[data-page="home"]{ position:relative; }
+  .page.active{ display:block; animation: pageReveal .72s cubic-bezier(.22,1,.36,1) both; }
+  .page.is-leaving{ display:block; animation: pageExit .34s cubic-bezier(.55,0,1,.45) both; pointer-events:none; }
+  @keyframes pageReveal{
+    from{ opacity:0; clip-path:circle(0% at 88% 12%); transform:translateY(18px); }
+    to{ opacity:1; clip-path:circle(150% at 88% 12%); transform:none; }
+  }
+  @keyframes pageExit{
+    from{ opacity:1; clip-path:circle(150% at 12% 88%); transform:none; }
+    to{ opacity:0; clip-path:circle(0% at 12% 88%); transform:translateY(-10px); }
+  }
+
+  /* ===== Home portrait ===== */
+  .home-layout{ display:grid; grid-template-columns:minmax(0,1fr) minmax(250px,360px); gap:clamp(36px,7vw,96px); align-items:center; }
+  .home-copy{ max-width:580px; }
+  .photo-slot{
+    min-height:430px; position:relative; overflow:hidden; border-radius:170px 170px 22px 22px;
+    background:linear-gradient(145deg, #dfe4dc, #b8c4b8); border:1px solid var(--rule);
+    box-shadow:16px 18px 0 var(--paper-dim); isolation:isolate;
+  }
+  .photo-slot::before{
+    content:""; position:absolute; inset:14px; border:1px solid rgba(27,36,49,.22); border-radius:155px 155px 12px 12px;
+  }
+  .photo-slot::after{
+    content:""; position:absolute; width:220px; height:220px; border-radius:50%; background:var(--brass); opacity:.82;
+    right:-80px; bottom:-75px; z-index:-1;
+  }
+  .photo-slot img{ width:100%; height:100%; position:absolute; inset:0; object-fit:cover; }
+  .photo-placeholder{ height:100%; min-height:430px; display:flex; flex-direction:column; justify-content:flex-end; padding:32px; }
+  .photo-placeholder strong{ font-family:var(--display); font-size:clamp(27px,3vw,38px); font-weight:500; line-height:1.05; }
+  .photo-placeholder span{ font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--slate); margin-top:10px; }
+  .photo-note{ position:absolute; top:26px; left:28px; font:600 10px/1 var(--mono); letter-spacing:.13em; text-transform:uppercase; color:var(--ink); }
+  .home-layout .eyebrow, .home-layout h1, .home-layout .tagline, .home-layout .social-row, .home-layout .edu-block, .photo-slot{ animation:riseIn .65s both; }
+  .home-layout h1{ animation-delay:.07s; }.home-layout .tagline{ animation-delay:.14s; }.home-layout .social-row{ animation-delay:.21s; }.home-layout .edu-block{ animation-delay:.28s; }.photo-slot{ animation-delay:.16s; }
+  @keyframes riseIn{ from{opacity:0; transform:translateY(18px)} to{opacity:1; transform:none} }
+
+  /* ===== Playful hero treatment ===== */
+  body[data-page="home"]{ background:#78a6da; color:#fffdf4; }
+  body[data-page="home"] .topbar, body[data-page="home"] .pager, body[data-page="home"] footer{ border-color:rgba(255,253,244,.25); }
+  body[data-page="home"] .logo span, body[data-page="home"] .eyebrow, body[data-page="home"] .pager .center{ color:#ffe04a; }
+  body[data-page="home"] .menu-btn, body[data-page="home"] .pager button, body[data-page="home"] footer{ color:#fffdf4; }
+  body[data-page="home"] .menu-btn .bars span{ background:#fffdf4; }
+  body[data-page="home"] .quick-nav{ background:rgba(255,253,244,.28); border-color:rgba(255,253,244,.5); }
+  body[data-page="home"] .quick-nav a:hover{ background:#fffdf4; color:var(--ink); }
+  body[data-page="home"] .tagline, body[data-page="home"] .edu-meta{ color:rgba(255,253,244,.83); }
+  body[data-page="home"] .social-row a{ border-color:rgba(255,253,244,.5); }
+  body[data-page="home"] .edu-block{ border-color:rgba(255,253,244,.35); }
+  body[data-page="home"] .page-wrap{ max-width:1200px; padding-top:42px; }
+  body[data-page="home"] h1.name{ font-size:clamp(58px,9.5vw,138px); line-height:.83; letter-spacing:-.065em; max-width:760px; text-shadow:2px 3px 0 rgba(39,77,124,.12); }
+  body[data-page="home"] .photo-slot{ background:linear-gradient(150deg,#9dc8ef,#4f83c7); border-color:rgba(255,253,244,.55); box-shadow:16px 18px 0 rgba(41,83,133,.24); }
+  body[data-page="home"] .photo-slot::before{ border-color:rgba(255,253,244,.55); }
+  body[data-page="home"] .photo-slot::after{ background:#ffe04a; }
+  body[data-page="home"] .photo-placeholder span{ color:rgba(255,253,244,.8); }
+  .hero-doodles{ position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+  .hero-sun{ position:absolute; width:140px; height:140px; right:8%; top:12%; border-radius:50%; background:repeating-linear-gradient(135deg,#ffe04a 0 9px,transparent 9px 16px); opacity:.96; }
+  .hero-cloud{ position:absolute; width:190px; height:38px; background:rgba(255,253,244,.7); border-radius:999px; right:-26px; top:27%; }
+  .hero-cloud::before{ content:""; position:absolute; width:76px; height:50px; border-radius:50%; background:inherit; left:36px; bottom:0; }
+  .hero-squiggle{ position:absolute; left:4%; bottom:7%; width:140px; height:70px; border-top:5px solid #fffdf4; border-radius:50%; transform:rotate(12deg); opacity:.8; }
 
   .eyebrow{
     font-family: var(--mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase;
     color: var(--brass); margin-bottom:16px;
   }
   h1.name{
-    font-family: var(--display); font-weight:500; font-size: clamp(38px,7vw,60px);
-    line-height:1.04; margin:0 0 20px 0; letter-spacing:-.01em;
+    font-family: var(--display); font-weight:650; font-size: clamp(38px,7vw,60px);
+    line-height:.98; margin:0 0 20px 0; letter-spacing:-.045em;
   }
   .tagline{ font-size:17px; color:var(--slate); max-width:520px; margin:0 0 32px 0; }
 
@@ -109,10 +168,14 @@
 
   .card-list{ display:flex; flex-direction:column; }
   .card{ padding: 18px 0; border-bottom:1px solid var(--rule); }
+  .card{ transition:padding .24s ease, color .24s ease; }
+  .card:hover{ padding-left:12px; }
+  .card:hover .card-title{ color:var(--brass); }
   .card:last-child{ border-bottom:none; }
   .card-title{ font-weight:600; font-size:15.5px; }
   .card-org{ color:var(--brass); font-size:12.5px; font-weight:600; letter-spacing:.02em; text-transform:uppercase; margin-top:2px; }
   .card p{ color:var(--slate); font-size:14px; margin:8px 0 0 0; }
+
 
   .group{ margin-bottom:28px; }
   .group:last-child{ margin-bottom:0; }
@@ -149,9 +212,13 @@
 
   @media (max-width:600px){
     .topbar{ padding:20px 22px; }
+    .quick-nav{ display:none; }
     .page-wrap{ padding:12px 22px 28px; }
     .pager{ padding:16px 22px; }
     .overlay{ padding:0 28px; }
+    .home-layout{ grid-template-columns:1fr; gap:32px; }
+    .photo-slot{ min-height:330px; max-width:360px; width:100%; }
+    .photo-placeholder{ min-height:330px; }
   }
 </style>
 </head>
@@ -159,6 +226,11 @@
 
 <div class="topbar">
   <div class="logo">Aashrith<span>.</span></div>
+  <nav class="quick-nav" aria-label="Primary navigation">
+    <a href="#" data-page="research">Experience</a>
+    <a href="#" data-page="awards">Awards</a>
+    <a href="#" data-page="contact">Contact</a>
+  </nav>
   <button class="menu-btn" id="menuBtn">
     <span class="bars"><span></span><span></span><span></span></span>
     Menu
@@ -177,25 +249,33 @@
 
     <!-- HOME -->
     <section class="page active" data-page="home">
-      <div class="eyebrow">Class of 2027</div>
-      <h1 class="name">Aashrith Banda</h1>
-      <p class="tagline">Student researcher working across biotech, environmental engineering, and assistive
-        hardware — currently splitting time between a CRISPR workshop, a Harvard-mentored paper, and two
-        nonprofits focused on tech access.</p>
-      <div class="social-row">
-        <a href="mailto:aashrith.banda@gmail.com">Email</a>
-        <a href="https://www.linkedin.com/in/aashrith-banda-0211b9304/" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="tel:+13025952403">Phone</a>
-      </div>
-      <div class="edu-block">
-        <div class="edu-school">Wilmington Charter School</div>
-        <div class="edu-meta">Focus: Biotechnology &amp; Environmental Engineering</div>
-        <div class="edu-meta">2032 – 2027 · Class of 2027</div>
-        <!-- <div class="edu-stats">
-          <div><div class="figure">15+</div><div class="caption">Research roles</div></div>/
-          <div><div class="figure">$16K+</div><div class="caption">Project funding </div></div>
-          <div><div class="figure">4</div><div class="caption">Clubs led</div></div>
-        </div> -->
+      <div class="hero-doodles" aria-hidden="true"><span class="hero-sun"></span><span class="hero-cloud"></span><span class="hero-squiggle"></span></div>
+      <div class="home-layout">
+        <div class="home-copy">
+          <div class="eyebrow">Hello, I’m Aashrith Banda · Class of 2027</div>
+          <h1 class="name">Aashrith Banda</h1>
+          <p class="tagline">Student researcher working across biotech, environmental engineering, and assistive
+            hardware — currently splitting time between a CRISPR workshop, a Harvard-mentored paper, and two
+            nonprofits focused on tech access.</p>
+          <div class="social-row">
+            <a href="mailto:aashrith.banda@gmail.com">Email</a>
+            <a href="https://www.linkedin.com/in/aashrith-banda-0211b9304/" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="tel:+13025952403">Phone</a>
+          </div>
+          <div class="edu-block">
+            <div class="edu-school">Wilmington Charter School</div>
+            <div class="edu-meta">Focus: Biotechnology &amp; Environmental Engineering</div>
+            <div class="edu-meta">2032 – 2027 · Class of 2027</div>
+          </div>
+        </div>
+        <!-- Replace this placeholder with: <img src="your-photo.jpg" alt="Aashrith Banda"> -->
+        <aside class="photo-slot" aria-label="Portrait photo placeholder">
+          <div class="photo-note">Portrait / 01</div>
+          <div class="photo-placeholder">
+            <strong>Your photo<br>goes here.</strong>
+            <span>Replace with a portrait</span>
+          </div>
+        </aside>
       </div>
     </section>
 
@@ -424,17 +504,34 @@
   const nextBtn = document.getElementById('nextBtn');
   const pagerLabel = document.getElementById('pagerLabel');
   let current = 0;
+  let transitioning = false;
 
   function render(){
     pages.forEach(p => p.classList.toggle('active', p.dataset.page === order[current]));
     overlay.querySelectorAll('a').forEach(a => a.classList.toggle('current', a.dataset.page === order[current]));
+    document.body.dataset.page = order[current];
     pagerLabel.textContent = String(current+1).padStart(2,'0') + ' / ' + String(order.length).padStart(2,'0');
     window.scrollTo(0,0);
   }
 
   function goTo(pageName){
     const idx = order.indexOf(pageName);
-    if(idx > -1){ current = idx; render(); closeMenu(); }
+    if(idx < 0 || idx === current || transitioning) return;
+    transitioning = true;
+    const outgoing = document.querySelector('.page.active');
+    const incoming = [...pages].find(p => p.dataset.page === order[idx]);
+    closeMenu();
+    outgoing.classList.add('is-leaving');
+    setTimeout(() => {
+      outgoing.classList.remove('active', 'is-leaving');
+      current = idx;
+      incoming.classList.add('active');
+      document.body.dataset.page = order[current];
+      pagerLabel.textContent = String(current+1).padStart(2,'0') + ' / ' + String(order.length).padStart(2,'0');
+      overlay.querySelectorAll('a').forEach(a => a.classList.toggle('current', a.dataset.page === order[current]));
+      window.scrollTo(0,0);
+      setTimeout(() => { transitioning = false; }, 720);
+    }, 330);
   }
 
   function closeMenu(){ overlay.classList.remove('open'); menuBtn.classList.remove('open'); }
@@ -446,13 +543,14 @@
   overlay.querySelectorAll('a').forEach(a => {
     a.addEventListener('click', (e) => { e.preventDefault(); goTo(a.dataset.page); });
   });
+  document.querySelectorAll('.quick-nav a').forEach(a => {
+    a.addEventListener('click', (e) => { e.preventDefault(); goTo(a.dataset.page); });
+  });
   prevBtn.addEventListener('click', () => {
-    current = (current - 1 + order.length) % order.length;
-    render();
+    goTo(order[(current - 1 + order.length) % order.length]);
   });
   nextBtn.addEventListener('click', () => {
-    current = (current + 1) % order.length;
-    render();
+    goTo(order[(current + 1) % order.length]);
   });
   document.addEventListener('keydown', (e) => {
     if(e.key === 'ArrowRight') nextBtn.click();
